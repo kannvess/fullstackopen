@@ -16,6 +16,7 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected.number]}
       <br />
       has {selected.votes[selected.number]} votes
@@ -26,6 +27,8 @@ const App = () => {
       <button onClick={() => {copy[selected.number] += 1; setSelected({...selected, votes: copy})}}>
         vote
       </button>
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[selected.votes.indexOf(Math.max(...selected.votes))]}
     </div>
   )
 }

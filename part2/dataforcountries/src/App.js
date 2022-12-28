@@ -15,7 +15,6 @@ const Country = ({data}) =>
       }
     </ul>
     <img src={Object.values(data.flags)[0]} />
-    {console.log(data)}
   </>
 
 const App = ({response}) => {
@@ -36,9 +35,9 @@ const App = ({response}) => {
       {
         filteredDatas.length !== 1
         ? filteredDatas.length > 10
-          ? 'Too many matches, specify another filter'
+          ? <p>Too many matches, specify another filter</p>
           : filteredDatas.map(filteredData =>
-              <p key={filteredData.name.official}>{filteredData.name.official}</p>
+              <p key={filteredData.name.official}>{filteredData.name.official} <button onClick={() => setFilter(filteredData.name.official)}>show</button></p>
             )
         : <Country data={filteredDatas[0]} />
       }

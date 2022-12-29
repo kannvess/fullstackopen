@@ -54,17 +54,21 @@ const App = () => {
         .create(nameObject)
         .then(newPerson => {
           setPersons(persons.concat(newPerson))
+          setNewName('')
+          setNewNumber('')
         })
-
-      // axios
-      //   .post('http://localhost:3001/persons', nameObject)
-      //   .then(response => {
-      //     setPersons(persons.concat(response.data))
-      //     setNewName('')
-      //     setNewNumber('')
-      //   })
-      
     }
+  }
+
+  const deletePerson = (event) => {
+    const id = parseInt(event.target.id)
+    const targetPerson = persons.find(person => person.id === id)
+
+    window.confirm(`Delete ${targetPerson.name}?`)
+    ? personService
+      .erase(id)
+      .then(() => setPersons(persons.filter(person => person.id !== id)))
+    : setPersons(persons)
   }
   
   return (
@@ -74,7 +78,7 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm onSubmit={addPerson} nameValue={newName} nameHandler={handleNewName} numberValue={newNumber} numberHandler={handleNewNumber} />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={deletePerson} />
     </div>
   )
 }

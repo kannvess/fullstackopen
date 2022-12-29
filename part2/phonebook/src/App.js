@@ -40,10 +40,23 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
+    const targetPerson = persons.find(person => person.name.toLowerCase() == newName.toLowerCase())
+
+    if (targetPerson) {      
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const newPerson = {name: newName, number: newNumber}
+
+        personService
+          .update(targetPerson.id, newPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === targetPerson.id ? returnedPerson : person))
+            setNewName('')
+            setNewNumber('')
+          })
+      } else {
+        setNewName('')
+        setNewNumber('')
+      }
     } else {
       const nameObject = {
         name: newName,

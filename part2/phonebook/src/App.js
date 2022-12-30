@@ -20,6 +20,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [messageColor, setMessageColor] = useState('green')
 
   const handleNewName = (event) => {
     setNewName(event.target.value)
@@ -56,6 +57,16 @@ const App = () => {
             setTimeout(() => {
               setMessage(null)
             }, 3000)
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(() => {
+            setMessage(`Information of ${newName} has already been removed from server`)
+            setMessageColor('red')
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
+            setPersons(persons.filter(person => person.name != newName))
             setNewName('')
             setNewNumber('')
           })
@@ -97,7 +108,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} messageColor={messageColor} />
       <Filter text={'filter shown with'} filterValue={filter} filterHandler={handleFilter} />
       <h3>Add a new</h3>
       <PersonForm onSubmit={addPerson} nameValue={newName} nameHandler={handleNewName} numberValue={newNumber} numberHandler={handleNewNumber} />

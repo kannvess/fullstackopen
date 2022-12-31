@@ -47,7 +47,6 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id)
-	const person = persons.find(person => person.id === id)
 	persons = persons.filter(person => person.id !== id)
 
 	response.status(204).end()
@@ -59,6 +58,18 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
 	const body = request.body
+
+	if (!body.name || !body.number) {
+		response.status(400).json({
+			error: 'name/number must not be empty'
+		})
+	}
+
+	if (persons.find(person => person.name === body.name)) {
+		response.status(400).json({
+			error: `${body.name} already exist`
+		})
+	}
 
 	const person = {
 		id: generateId(),

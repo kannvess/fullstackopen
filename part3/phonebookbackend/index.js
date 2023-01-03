@@ -4,8 +4,8 @@ const morgan = require('morgan')
 const app = express()
 const Person = require('./models/person')
 
-app.use(express.json())
 app.use(express.static('build'))
+app.use(express.json())
 
 morgan.token('json', (request, response) => {
 	if (request.method === 'POST') return JSON.stringify(request.body)
@@ -64,6 +64,21 @@ app.post('/api/persons', (request, response) => {
 	person.save().then(savedPerson => {
 		response.json(savedPerson)
 	})
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+	const body = request.body
+	
+	const person = {
+		name: body.name,
+		number: body.number
+	}
+	
+	Person.findByIdAndUpdate(request.params.id, person, {new: true})
+		.then(updatedNote => {
+			response.json(updatedNote)
+		})
+		.catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {

@@ -10,7 +10,8 @@
   "author": "Rafli Afriansyah",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongoose": "^6.8.2"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

@@ -8,6 +8,8 @@ const totalLikes = (blogs) => (blogs.length === 0
 const favoriteBlog = (blogs) => {
   const highestLikes = Math.max(...blogs.map((blog) => blog.likes));
   const blogWithTheHighestLikes = blogs.find((blog) => blog.likes === highestLikes);
+  delete blogWithTheHighestLikes._id;
+  delete blogWithTheHighestLikes.__v;
 
   return blogWithTheHighestLikes;
 };

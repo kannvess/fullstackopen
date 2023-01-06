@@ -14,4 +14,27 @@ const favoriteBlog = (blogs) => {
   return blogWithTheHighestLikes;
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+  const authorWithBlogs = [];
+
+  for (let index = 0; index < blogs.length; index += 1) {
+    if (authorWithBlogs.find((blog) => blog.author === blogs[index].author)) {
+      authorWithBlogs.find((blog) => blog.author === blogs[index].author).blogs += 1;
+    } else {
+      authorWithBlogs.push({
+        author: blogs[index].author,
+        blogs: 1,
+      });
+    }
+  }
+
+  const authorWithMostBlogs = authorWithBlogs
+    // eslint-disable-next-line max-len
+    .find((author) => author.blogs === Math.max(...authorWithBlogs.map((authorr) => authorr.blogs)));
+
+  return authorWithMostBlogs;
+};
+
+module.exports = {
+  dummy, totalLikes, favoriteBlog, mostBlogs,
+};

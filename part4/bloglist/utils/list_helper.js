@@ -35,6 +35,25 @@ const mostBlogs = (blogs) => {
   return authorWithMostBlogs;
 };
 
+const mostLikes = (blogs) => {
+  const authorWithLikes = [];
+
+  for (let i = 0; i < blogs.length; i += 1) {
+    if (authorWithLikes.find((j) => j.author === blogs[i].author)) {
+      authorWithLikes.find((j) => j.author === blogs[i].author).likes += blogs[i].likes;
+    } else {
+      authorWithLikes.push({
+        author: blogs[i].author,
+        likes: blogs[i].likes,
+      });
+    }
+  }
+
+  return authorWithLikes
+    // eslint-disable-next-line max-len
+    .find((author) => author.likes === Math.max(...authorWithLikes.map((authorr) => authorr.likes)));
+};
+
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs,
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes,
 };

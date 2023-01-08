@@ -76,6 +76,18 @@ test('likes property defaults to zero', async () => {
   expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toBe(0);
 });
 
+test('title or url missing respond with HTTP 400', async () => {
+  const newBlog = {
+    author: 'nashkihaysnairfailfardammahum',
+    likes: 123,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

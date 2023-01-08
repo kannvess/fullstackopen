@@ -88,6 +88,21 @@ test('title or url missing respond with HTTP 400', async () => {
     .expect(400);
 });
 
+test('deleting a blog returns 204', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+
+  const ids = blogsAtEnd.map((blog) => blog.id);
+  expect(ids).not.toContain(blogToDelete.id);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

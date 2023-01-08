@@ -113,14 +113,15 @@ test('updating a note', async () => {
     likes: 123,
   };
 
-  await api
+  const response = await api
     .put(`/api/blogs/${blogToUpdate.id}`)
     .send(newBlog)
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
-  const updatedBlog = blogsAtStart.find((blog) => blog.id === blogToUpdate.id);
-  expect(blogToUpdate).toEqual(updatedBlog);
+  const blogsAtEnd = await helper.blogsInDb();
+  const updatedBlog = blogsAtEnd.find((blog) => blog.id === blogToUpdate.id);
+  expect(response.body).toEqual(updatedBlog);
 });
 
 afterAll(() => {

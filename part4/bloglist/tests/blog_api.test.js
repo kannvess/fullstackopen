@@ -103,6 +103,26 @@ test('deleting a blog returns 204', async () => {
   expect(ids).not.toContain(blogToDelete.id);
 });
 
+test('updating a note', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+  const newBlog = {
+    title: 'Testing HTTP PUT',
+    author: 'nashkihaysnairfailfardammahum',
+    url: 'http://localhost:3003/api/blogs',
+    likes: 123,
+  };
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const updatedBlog = blogsAtStart.find((blog) => blog.id === blogToUpdate.id);
+  expect(blogToUpdate).toEqual(updatedBlog);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

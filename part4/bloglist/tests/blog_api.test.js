@@ -36,6 +36,27 @@ test('unique identifier property of the blog posts is named id', async () => {
   });
 });
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Testing HTTP POST',
+    author: 'nashkihaysnairfailfardammahum',
+    url: 'http://localhost:3003/api/blogs',
+    likes: 999,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const titles = blogsAtEnd.map((blog) => blog.title);
+  expect(titles).toContain(newBlog.title);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

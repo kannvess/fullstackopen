@@ -8,6 +8,7 @@ const app = express();
 const notesRouter = require('./controllers/blogs');
 const { requestLogger, unknownEndpoint, errorHandler } = require('./utils/middleware');
 const { logInfo, logError } = require('./utils/logger');
+const userRouter = require('./controllers/users');
 
 logInfo('connecting to', MONGODB_URI);
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use('/api/blogs', notesRouter);
+app.use('/api/users', userRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);

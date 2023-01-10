@@ -43,7 +43,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    const targetPerson = persons.find(person => person.name.toLowerCase() == newName.toLowerCase())
+    const targetPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
 
     if (targetPerson) {      
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -56,17 +56,18 @@ const App = () => {
             setMessage(`Changed ${newName}'s number`)
             setTimeout(() => {
               setMessage(null)
+              setMessageColor('green')
             }, 3000)
             setNewName('')
             setNewNumber('')
           })
-          .catch(() => {
-            setMessage(`Information of ${newName} has already been removed from server`)
+          .catch(error => {
+            setMessage(error.response.data.error)
             setMessageColor('red')
             setTimeout(() => {
               setMessage(null)
+              setMessageColor('green')
             }, 3000)
-            setPersons(persons.filter(person => person.name != newName))
             setNewName('')
             setNewNumber('')
           })
@@ -91,11 +92,21 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
+          .catch(error => {
+            setMessage(error.response.data.error)
+            setMessageColor('red')
+            setTimeout(() => {
+              setMessage(null)
+              setMessageColor('green')
+            }, 3000)
+            setNewName('')
+            setNewNumber('')
+          })
     }
   }
 
   const deletePerson = (event) => {
-    const id = parseInt(event.target.id)
+    const id = event.target.id
     const targetPerson = persons.find(person => person.id === id)
 
     window.confirm(`Delete ${targetPerson.name}?`)

@@ -6,12 +6,16 @@ const app = require('../app');
 const api = supertest(app);
 
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+  await User.deleteMany({});
 
   const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog));
-  const promiseArray = blogObjects.map((blog) => blog.save());
+  const userObjects = helper.initialUsers.map((user) => new User(user));
+  const promiseArray = blogObjects.map((blog) => blog.save())
+    .concat(userObjects.map((user) => user.save()));
   await Promise.all(promiseArray);
 });
 
@@ -122,6 +126,25 @@ test('updating a note', async () => {
   const blogsAtEnd = await helper.blogsInDb();
   const updatedBlog = blogsAtEnd.find((blog) => blog.id === blogToUpdate.id);
   expect(response.body).toEqual(updatedBlog);
+});
+
+test('invalid users are not created', async () => {
+  const usersAtStart = await helper.usersInDb();
+
+  const newUser = {
+    username: 'zhafran',
+    name: 'Muhammad Zhafran Ilham',
+    password: '12',
+  };
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+
+  const usersAtEnd = await helper.usersInDb();
+  expect(usersAtEnd).toHaveLength(usersAtStart.length);
 });
 
 afterAll(() => {

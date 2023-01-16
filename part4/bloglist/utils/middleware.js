@@ -24,7 +24,9 @@ const errorHandler = (error, request, response, next) => {
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization');
 
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+  if (!authorization) {
+    response.status(401).error({ error: 'token missing or invalid' });
+  } else if (authorization && authorization.toLowerCase().startsWith('bearer')) {
     request.token = authorization.substring(7);
   }
 

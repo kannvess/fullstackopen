@@ -5,9 +5,9 @@ const cors = require('cors');
 const { MONGODB_URI } = require('./utils/config');
 
 const app = express();
-const notesRouter = require('./controllers/blogs');
+const blogsRouter = require('./controllers/blogs');
 const {
-  requestLogger, unknownEndpoint, errorHandler, tokenExtractor,
+  requestLogger, unknownEndpoint, errorHandler, tokenExtractor, userExtractor,
 } = require('./utils/middleware');
 const { logInfo, logError } = require('./utils/logger');
 const userRouter = require('./controllers/users');
@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use(tokenExtractor);
-app.use('/api/blogs', notesRouter);
+app.use('/api/blogs', userExtractor, blogsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
 

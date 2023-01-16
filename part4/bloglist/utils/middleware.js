@@ -1,4 +1,5 @@
 const morgan = require('morgan');
+const User = require('../models/user');
 const { logError } = require('./logger');
 
 const requestLogger = morgan('tiny');
@@ -30,6 +31,13 @@ const tokenExtractor = (request, response, next) => {
   next();
 };
 
+const userExtractor = async (request, response, next) => {
+  const user = await User.findById(request.body.userId);
+  request.user = user;
+
+  next();
+};
+
 module.exports = {
-  requestLogger, unknownEndpoint, errorHandler, tokenExtractor,
+  requestLogger, unknownEndpoint, errorHandler, tokenExtractor, userExtractor,
 };

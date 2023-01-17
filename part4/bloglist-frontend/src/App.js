@@ -5,7 +5,6 @@ import loginService from './services/login'
 
 const LoginForm = ({username, setUsername, password, setPassword, handleLogin}) => (
   <div>
-    <h2>Log in to application</h2>
     <form onSubmit={handleLogin}>
       <div>
         username <input type="text" value={username} name="Username" onChange={({target}) => setUsername(target.value)} />
@@ -17,6 +16,18 @@ const LoginForm = ({username, setUsername, password, setPassword, handleLogin}) 
     </form>
   </div>
 )
+
+const Notification = ({message, messageCategory}) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={messageCategory}>
+      {message}
+    </div>
+  )
+}
 
 const UserCredential = ({user, handleLogout}) => (
   <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
@@ -56,6 +67,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState(null)
+  const [messageCategory, setMessageCategory] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -75,21 +88,32 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    const user = await loginService.login({username, password})
-
+    
     try {
+      const user = await loginService.login({username, password})
       blogService.setToken(user.token)
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       setUser(user)
+      setMessage(null)
+      setMessageCategory('')
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log(exception);
+      setMessage('wrong username or password')
+      setMessageCategory('error')
+      setTimeout(() => {
+        setMessage(null)
+        setMessageCategory('')
+      }, 5000)
+      setUsername('')
+      setPassword('')
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
+    setMessage(null)
+    setMessageCategory('')
     setUser(null)
   }
 
@@ -105,6 +129,12 @@ const App = () => {
       .create(newBlog)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+        setMessageCategory('success')
+        setTimeout(() => {
+          setMessage(null)
+          setMessageCategory('')
+        }, 5000)
         setTitle('')
         setAuthor('')
         setUrl('')
@@ -114,9 +144,14 @@ const App = () => {
   return (
     <div>
     {user === null
-      ? <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
+      ? <div>
+          <h2>log in to application</h2>
+          <Notification message={message} messageCategory={messageCategory} />
+          <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
+        </div>
       : <div>
           <h2>blogs</h2>
+          <Notification message={message} messageCategory={messageCategory} />
           <UserCredential user={user} handleLogout={handleLogout} />
           <BlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog} />
           <BlogList blogs={blogs} />

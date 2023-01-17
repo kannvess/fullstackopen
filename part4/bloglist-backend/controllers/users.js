@@ -1,27 +1,30 @@
 const bcrypt = require('bcrypt');
-const userRouter = require('express').Router();
+const router = require('express').Router();
 const User = require('../models/user');
 
-userRouter.get('/', async (request, response) => {
-  const users = await User.find({}).populate('blogs', {
-    url: 1, author: 1, title: 1, id: 1,
-  });
+router.get('/', async (request, response) => {
+  const users = await User
+    .find({})
+    .populate('blogs', {
+      author: 1, title: 1, url: 1, likes: 1,
+    });
+
   response.json(users);
 });
 
-userRouter.post('/', async (request, response) => {
+router.post('/', async (request, response) => {
   const { username, name, password } = request.body;
+
+  if (!password || password.length < 3) {
+    response.status(400).json({
+      error: 'invalid password',
+    });
+  }
 
   const existingUser = await User.findOne({ username });
   if (existingUser) {
     response.status(400).json({
       error: 'username must be unique',
-    });
-  }
-
-  if (username.length < 3 || password.length < 3) {
-    response.status(400).json({
-      error: 'invalid username or password',
     });
   }
 
@@ -39,4 +42,4 @@ userRouter.post('/', async (request, response) => {
   response.status(201).json(savedUser);
 });
 
-module.exports = userRouter;
+module.exports = router;

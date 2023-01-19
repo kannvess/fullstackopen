@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
 
 const LoginForm = ({username, setUsername, password, setPassword, handleLogin}) => (
   <div>
@@ -32,24 +33,6 @@ const Notification = ({message, messageCategory}) => {
 
 const UserCredential = ({user, handleLogout}) => (
   <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-)
-
-const BlogForm = ({title, setTitle, author, setAuthor, url, setUrl, handleNewBlog}) => (
-  <div>
-    <h2>create new</h2>
-    <form onSubmit={handleNewBlog}>
-      <div>
-        title: <input type='text' value={title} name='Title' onChange={({target}) => setTitle(target.value)} />
-      </div>
-      <div>
-        author: <input type='text' value={author} name='Author' onChange={({target}) => setAuthor(target.value)} />
-      </div>
-      <div>
-        url: <input type='text' value={url} name='Url' onChange={({target}) => setUrl(target.value)} />
-      </div>
-      <button type='submit'>create</button>
-    </form>
-  </div>
 )
 
 const BlogList = ({blogs}) => (
@@ -118,14 +101,7 @@ const App = () => {
     setUser(null)
   }
 
-  const handleNewBlog = (event) => {
-    event.preventDefault()
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
-
+  const handleNewBlog = (newBlog) => {
     blogService
       .create(newBlog)
       .then(returnedBlog => {
@@ -155,7 +131,7 @@ const App = () => {
           <Notification message={message} messageCategory={messageCategory} />
           <UserCredential user={user} handleLogout={handleLogout} />
           <Togglable buttonLabel='new note'>
-            <BlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog} />
+            <BlogForm createBlog={handleNewBlog} />
           </Togglable> 
           <BlogList blogs={blogs} />
         </div>

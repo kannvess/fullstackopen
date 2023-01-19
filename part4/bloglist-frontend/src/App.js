@@ -35,10 +35,10 @@ const UserCredential = ({user, handleLogout}) => (
   <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
 )
 
-const BlogList = ({blogs}) => (
+const BlogList = ({blogs, updateBlog}) => (
   <div>
     {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
+      <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
     )}
   </div>
 )
@@ -112,6 +112,16 @@ const App = () => {
       })
   }
 
+  const handleUpdate = (newBlog) => {
+    blogService
+      .update(newBlog)
+      .then(returnedBlog => {
+        setBlogs(
+          blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog)
+        )
+      })
+  }
+
   return (
     <div>
     {user === null
@@ -126,8 +136,8 @@ const App = () => {
           <UserCredential user={user} handleLogout={handleLogout} />
           <Togglable buttonLabel='new note'>
             <BlogForm createBlog={handleNewBlog} />
-          </Togglable> 
-          <BlogList blogs={blogs} />
+          </Togglable>
+          <BlogList blogs={blogs} updateBlog={handleUpdate} />
         </div>
     }
     </div>

@@ -44,6 +44,10 @@ router.delete('/:id', async (request, response) => {
 });
 
 router.put('/:id', async (request, response) => {
+  if (!request.user) {
+    response.status(401).json({ error: 'token missing or invalid' });
+  }
+
   const blog = request.body;
 
   const updatedBlog = await Blog

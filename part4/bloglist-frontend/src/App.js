@@ -48,9 +48,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [message, setMessage] = useState(null)
   const [messageCategory, setMessageCategory] = useState('')
 
@@ -112,9 +109,6 @@ const App = () => {
           setMessage(null)
           setMessageCategory('')
         }, 5000)
-        setTitle('')
-        setAuthor('')
-        setUrl('')
       })
   }
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -153,7 +154,9 @@ const App = () => {
           <h2>blogs</h2>
           <Notification message={message} messageCategory={messageCategory} />
           <UserCredential user={user} handleLogout={handleLogout} />
-          <BlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog} />
+          <Togglable buttonLabel='new note'>
+            <BlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog} />
+          </Togglable> 
           <BlogList blogs={blogs} />
         </div>
     }

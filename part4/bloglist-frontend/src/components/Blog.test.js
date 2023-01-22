@@ -4,16 +4,31 @@ import userEvent from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 
-test('blog renders the blog\'s title and author, but does not render its URL or number of likes by default', () => {
-  const blog = {
-    title: 'Testing',
-    author: 'Testing',
-    likes: 0,
-    url: 'Testing'
-  }
+describe('<Blog />', () => {
+  let container
+  beforeEach(() => {
+    const blog = {
+      title: 'Testing',
+      author: 'Testing',
+      likes: 0,
+      url: 'Testing'
+    }
 
-  const { container } = render(<Blog blog={blog} />)
-  const detail = container.querySelector('.detail')
+    container = render(<Blog blog={blog} />).container
+  })
 
-  expect(detail).toHaveStyle('display: none')
+  test('renders the blog\'s title and author, but does not render its URL or number of likes by default', () => {
+    const detail = container.querySelector('.detail')
+
+    expect(detail).toHaveStyle('display: none')
+  })
+
+  test('blog\'s URL and number of likes are shown when the button controlling the shown details has been clicked', async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText('show detail')
+    await user.click(button)
+
+    const detail = container.querySelector('.detail')
+    expect(detail).not.toHaveStyle('display: none')
+  })
 })

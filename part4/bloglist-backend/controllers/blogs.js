@@ -48,12 +48,13 @@ router.put('/:id', async (request, response) => {
     response.status(401).json({ error: 'token missing or invalid' });
   }
 
+  const { user } = request;
   const blog = request.body;
 
   const updatedBlog = await Blog
     .findByIdAndUpdate(
       request.params.id,
-      blog,
+      {...blog, user: user.id},
       { new: true, runValidators: true, context: 'query' },
     );
 

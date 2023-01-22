@@ -38,8 +38,7 @@ test('if the like button is clicked twice, the event handler the component recei
     title: 'Testing',
     author: 'Testing',
     likes: 0,
-    url: 'Testing',
-    user: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzYzY5NTRmN2E5NzFjNjczOTRjMDE4OCIsImlhdCI6MTY3NDM1MDIyNX0.8noJwqwWq595ORs5aUmxnaECtc9wtsLuXdv3Rgs_Xi4'
+    url: 'Testing'
   }
 
   const updateBlog = jest.fn()

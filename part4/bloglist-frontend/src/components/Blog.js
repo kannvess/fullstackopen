@@ -10,12 +10,19 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   }
 
   const [visible, setVisible] = useState(false)
+  const [showDetail, setShowDetail] = useState(false)
 
   const hideWhenVisible = ({ ...blogStyle, display: visible ? 'none' : '' })
   const showWhenVisible = ({ ...blogStyle, display: visible ? '' : 'none' })
+  const hideWhenDetail = ({ display: showDetail ? 'none' : '' })
+  const showWhenDetail = ({ display: showDetail ? '' : 'none' })
 
   const toggleVisibility = () => {
     setVisible(!visible)
+  }
+
+  const toggleDetail = () => {
+    setShowDetail(!showDetail)
   }
 
   const handleUpdate = () => {
@@ -34,10 +41,16 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       </div>
       <div style={showWhenVisible}>
         {blog.title} <button onClick={toggleVisibility}>hide</button>
-        <br /> {blog.url}
-        <br /> likes {blog.likes} <button onClick={handleUpdate}>like</button>
         <br /> {blog.author}
-        <br /> <button onClick={() => window.confirm(`Remove blog ${blog.title} by ${blog.author}`) ? handleRemove() : null}>remove</button>
+        <div style={hideWhenDetail}>
+          <button onClick={toggleDetail}>show detail</button>
+        </div>
+        <div className='detail' style={showWhenDetail}>
+          {blog.url}
+          <br /> likes {blog.likes} <button onClick={handleUpdate}>like</button>
+          <br /> <button onClick={toggleDetail}>hide detail</button>
+        </div>
+        <button onClick={() => window.confirm(`Remove blog ${blog.title} by ${blog.author}`) ? handleRemove() : null}>remove</button>
       </div>
     </div>
   )

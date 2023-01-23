@@ -37,7 +37,7 @@ const UserCredential = ({ user, handleLogout }) => (
 
 const BlogList = ({ blogs, updateBlog, removeBlog }) => {
   return (
-    <div>
+    <div id='blog-list'>
       {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
       )}

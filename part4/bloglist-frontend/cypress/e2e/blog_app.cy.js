@@ -50,7 +50,24 @@ describe('Blog app', function() {
 
       cy.get('#submit-button').click()
 
-      cy.contains('Blog created with cypress')
+      cy.get('#blog-list')
+        .should('contain', 'Blog created with cypress')
+    })
+
+    it.only('A blog can be liked', function() {
+      cy.contains('new blog').click()
+
+      cy.get('#title').type('Blog created with cypress')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('http://localhost:3000/__/#/specs/runner?file=cypress/e2e/blog_app.cy.js')
+
+      cy.get('#submit-button').click()
+
+      cy.get('#blog-list')
+        .should('contain', 'Blog created with cypress')
+        .contains('view').click()
+      cy.contains('show detail').click()
+      cy.contains('like').click()
     })
   })
 })

@@ -23,7 +23,7 @@ describe('Blog app', function() {
       cy.contains('blogs')
     })
 
-    it.only('fails with wrong credentials', function() {
+    it('fails with wrong credentials', function() {
       cy.get('#username').type('root')
       cy.get('#password').type('wrong')
       cy.contains('login').click()
@@ -31,6 +31,26 @@ describe('Blog app', function() {
       cy.should('not.contain', 'blogs')
       cy.get('.error')
         .should('have.css', 'color', 'rgb(255, 0, 0)')
+    })
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.get('#username').type('root')
+      cy.get('#password').type('123')
+      cy.contains('login').click()
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+
+      cy.get('#title').type('Blog created with cypress')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('http://localhost:3000/__/#/specs/runner?file=cypress/e2e/blog_app.cy.js')
+
+      cy.get('#submit-button').click()
+
+      cy.contains('Blog created with cypress')
     })
   })
 })

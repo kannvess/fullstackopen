@@ -120,5 +120,38 @@ describe('Blog app', function() {
       cy.get('html')
         .should('contain', 'Blog created with cypress')
     })
+
+    it('Blogs are sorted based on likes descendingly', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('Blog number 1')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('http://localhost:3000/__/#/specs/runner?file=cypress/e2e/blog_app.cy.js')
+      cy.get('#submit-button').click()
+
+      cy.contains('new blog').click()
+      cy.get('#title').type('Blog number 2')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('http://localhost:3000/__/#/specs/runner?file=cypress/e2e/blog_app.cy.js')
+      cy.get('#submit-button').click()
+
+      cy.get('.blog').eq(0)
+        .should('contain', 'Blog number 1')
+        .contains('view').click()
+      cy.get('.blog').eq(0)
+        .contains('show detail').click()
+      cy.get('.blog').eq(0)
+        .contains('like').click()
+
+      cy.get('.blog').eq(1)
+        .should('contain', 'Blog number 2')
+        .contains('view').click()
+      cy.get('.blog').eq(1)
+        .contains('show detail').click()
+      cy.get('.blog').eq(1)
+        .contains('like').click().click()
+
+      cy.get('.blog').eq(0)
+        .should('contain', 'Blog number 2')
+    })
   })
 })

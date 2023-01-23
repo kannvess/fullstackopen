@@ -36,11 +36,11 @@ router.delete('/:id', async (request, response) => {
     response.status(401).json({
       error: 'only the creator can delete a blog',
     });
+  } else {
+    await Blog.findByIdAndRemove(request.params.id);
+    response.status(204).end();
   }
 
-  await Blog.findByIdAndRemove(request.params.id);
-
-  response.status(204).end();
 });
 
 router.put('/:id', async (request, response) => {

@@ -1,12 +1,21 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    const user = {
-      name: 'Superuser',
-      username: 'root',
-      password: '123'
-    }
-    cy.request('POST', 'http://localhost:3003/api/users', user)
+    const users = [
+      {
+        name: 'Superuser',
+        username: 'root',
+        password: '123'
+      },
+      {
+        name: 'Rafli Afriansyah',
+        username: 'rafli',
+        password: '123'
+      }
+    ]
+    users.map(user => {
+      cy.request('POST', 'http://localhost:3003/api/users', user)
+    })
     cy.visit('http://localhost:3000')
   })
 
@@ -54,7 +63,7 @@ describe('Blog app', function() {
         .should('contain', 'Blog created with cypress')
     })
 
-    it.only('A blog can be liked', function() {
+    it('A blog can be liked', function() {
       cy.contains('new blog').click()
 
       cy.get('#title').type('Blog created with cypress')
@@ -68,6 +77,48 @@ describe('Blog app', function() {
         .contains('view').click()
       cy.contains('show detail').click()
       cy.contains('like').click()
+    })
+
+    it('A user can delete their blog', function() {
+      cy.contains('new blog').click()
+
+      cy.get('#title').type('Blog created with cypress')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('http://localhost:3000/__/#/specs/runner?file=cypress/e2e/blog_app.cy.js')
+
+      cy.get('#submit-button').click()
+
+      cy.get('#blog-list')
+        .should('contain', 'Blog created with cypress')
+
+      cy.get('#blog-list')
+        .should('contain', 'Blog created with cypress')
+        .contains('view').click()
+      cy.contains('remove').click()
+
+      cy.get('#blog-list')
+        .should('not.contain', 'Blog created with cypress')
+    })
+
+    it('A user cannot delete a blog they did not create', function() {
+      cy.contains('new blog').click()
+
+      cy.get('#title').type('Blog created with cypress')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('http://localhost:3000/__/#/specs/runner?file=cypress/e2e/blog_app.cy.js')
+
+      cy.get('#submit-button').click()
+
+      cy.contains('logout').click()
+
+      cy.get('#username').type('rafli')
+      cy.get('#password').type('123')
+      cy.contains('login').click()
+
+      cy.contains('view').click()
+      cy.contains('remove').click()
+      cy.get('html')
+        .should('contain', 'Blog created with cypress')
     })
   })
 })

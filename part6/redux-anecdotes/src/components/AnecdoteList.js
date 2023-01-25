@@ -18,7 +18,7 @@ const Anecdote = ({anecdote, vote}) => {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdotes).slice()
+  const anecdotes = useSelector(state => state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter))).slice()
   
   return (
     <div>

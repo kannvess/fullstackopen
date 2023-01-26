@@ -3,12 +3,12 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 6
+      "votes": 30
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
       "id": "21149",
-      "votes": 3
+      "votes": 4
     },
     {
       "content": "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
@@ -37,13 +37,18 @@
     },
     {
       "content": "I am really grateful for the work you guys at fullstackopen has done, thank you for your wisdom in full stack development",
-      "votes": 10,
+      "votes": 282,
       "id": "aPPFV9q"
     },
     {
       "content": "Testing",
       "votes": 4,
       "id": "PpcLEkq"
+    },
+    {
+      "content": "testing",
+      "votes": 0,
+      "id": "93Dk9fk"
     }
   ]
 }

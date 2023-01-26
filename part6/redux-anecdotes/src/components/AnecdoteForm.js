@@ -1,7 +1,6 @@
 import { createAnecdote } from "../reducers/anecdoteReducer"
 import { useDispatch } from "react-redux"
 import { removeNotification, setNotification } from "../reducers/notificationReducer"
-import anecdoteService from "../services/anecdoteService"
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()

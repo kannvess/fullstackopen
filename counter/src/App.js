@@ -1,19 +1,19 @@
-import { createNote, toggleImportanceOf } from './reducers/noteReducer'
-import { useSelector, useDispatch } from 'react-redux'
-import NewNote from './components/NewNote'
-import Notes from './components/Notes'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import NewNote from "./components/NewNote"
+import Notes from "./components/Notes"
+import VisibilityFilter from "./components/VisibilityFilter"
+import { initializeNotes } from './reducers/noteReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const notes = useSelector(state => state)
-
-  const toggleImportance = (id) => {
-    dispatch(toggleImportanceOf(id))
-  }
-
+  useEffect(() => {
+    dispatch(initializeNotes())
+  }, [dispatch])
   return (
     <div>
       <NewNote />
+      <VisibilityFilter />
       <Notes />
     </div>
   )

@@ -80,7 +80,7 @@ const CreateNew = (props) => {
     e.preventDefault()
     resetContent()
     resetAuthor()
-    resetInfo()
+    resetInfo() // i finished exercise 7.6: anecdotes and hooks step3
   }
 
   return (

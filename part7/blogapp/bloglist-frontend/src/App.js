@@ -6,11 +6,12 @@ import BlogForm from "./components/BlogForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "./reducers/notificationReducer";
 import { setBlogs, newBlog, updateBlog, removeBlog } from "./reducers/blogReducer";
-import { setUser, login } from "./reducers/userReducer";
+import { setUser } from "./reducers/userReducer";
 import loginService from './services/login'
 import UserList from "./components/UserList";
 import userService from './services/users'
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useMatch } from "react-router-dom";
+import User from './components/User'
 
 const LoginForm = ({
   username,
@@ -148,6 +149,11 @@ const App = () => {
 
   const formRef = useRef();
 
+  const match = useMatch('/users/:id')
+  const userToShow = match
+    ? users.find(user => user.id === match.params.id)
+    : null
+
   return (
     <div>
       {user === null ? (
@@ -181,6 +187,7 @@ const App = () => {
                 />
               </div>
             } />
+            <Route path="/users/:id" element={<User user={userToShow} />} />
             </Routes>
         </div>
       )}

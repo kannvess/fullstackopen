@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "./reducers/notificationReducer";
 import { setBlogs, newBlog, updateBlog, removeBlog } from "./reducers/blogReducer";
+import { setUser, login } from "./reducers/userReducer";
+import loginService from './services/login'
 
 const LoginForm = ({
   username,
@@ -75,9 +76,9 @@ const BlogList = ({ blogs, updateBlog, removeBlog }) => {
 
 const App = () => {
   const [username, setUsername] = useState("");
-  const [user, setUser] = useState(null);
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
 
@@ -90,10 +91,10 @@ const App = () => {
 
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setUser(user));
       blogService.setToken(user.token);
     }
-  }, []);
+  }, [dispatch]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -102,7 +103,7 @@ const App = () => {
       const user = await loginService.login({ username, password });
       blogService.setToken(user.token);
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setUser(user);
+      dispatch(setUser(user))
       dispatch(setMessage(null, ""))
       setUsername("");
       setPassword("");
@@ -116,11 +117,12 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
     dispatch(setMessage(null, ""))
-    setUser(null);
+    dispatch(setUser(null));
   };
 
   const handleNewBlog = (blog) => {
     formRef.current.toggleVisibility();
+    dispatch(setMessage(`added ${blog.title}`, "success"))
     dispatch(newBlog(blog));
   };
 

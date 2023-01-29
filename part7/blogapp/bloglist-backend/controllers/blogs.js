@@ -1,34 +1,52 @@
 const router = require("express").Router();
 
 const Blog = require("../models/blog");
+const Comment = require('../models/comment')
 
 router.get("/", async (request, response) => {
-  const notes = await Blog.find({})
+  const blogs = await Blog
     .find({})
-    .populate("user", { username: 1, name: 1 });
+    .populate("user", { username: 1, name: 1 })
+    .populate("comments", { content: 1, id: 1});
 
-  response.json(notes);
+  response.json(blogs);
 });
 
 router.post("/", async (request, response) => {
   if (!request.user) {
     response.status(401).json({ error: "token missing or invalid" });
   }
-
+  
   const { user } = request;
   const blog = new Blog({
     ...request.body,
     likes: request.body.likes || 0,
     user: user.id,
   });
-
+  
   const savedBlog = await blog.save();
-
+  
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
-
+  
   response.status(201).json(savedBlog);
 });
+
+router.post('/:id/comments', async (request, response) => {
+  const blogId = request.params.id
+
+  const comment = new Comment({
+    content: request.body.content
+  })
+
+  const savedComment = await comment.save()
+
+  const blog = await Blog.findById(blogId)
+  blog.comments = blog.comments.concat(savedComment)
+  await blog.save()
+
+  response.status(201).json(savedComment)
+})
 
 router.delete("/:id", async (request, response) => {
   const blogToDelete = await Blog.findById(request.params.id);
@@ -62,5 +80,6 @@ router.put("/:id", async (request, response) => {
 
   response.json(updatedBlog);
 });
+
 
 module.exports = router;

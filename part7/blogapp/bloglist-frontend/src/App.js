@@ -12,7 +12,8 @@ import UserList from "./components/UserList";
 import userService from './services/users'
 import { Route, Routes, useMatch, Link } from "react-router-dom";
 import User from './components/User'
-import Navbar from "./components/Navbar";
+import Navigation from "./components/Navigation";
+import { Alert, Button, Form } from "react-bootstrap";
 
 const LoginForm = ({
   username,
@@ -22,10 +23,10 @@ const LoginForm = ({
   handleLogin,
 }) => (
   <div>
-    <form onSubmit={handleLogin}>
+    <Form onSubmit={handleLogin}>
       <div>
         username{" "}
-        <input
+        <Form.Control
           id="username"
           type="text"
           value={username}
@@ -35,7 +36,7 @@ const LoginForm = ({
       </div>
       <div>
         password{" "}
-        <input
+        <Form.Control
           id="password"
           type="password"
           value={password}
@@ -43,8 +44,8 @@ const LoginForm = ({
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
-    </form>
+      <Button type="submit">login</Button>
+    </Form>
   </div>
 );
 
@@ -53,7 +54,7 @@ const Notification = ({ message, messageCategory }) => {
     return null;
   }
 
-  return <div className={messageCategory}>{message}</div>;
+  return <Alert variant={messageCategory}>{message}</Alert>;
 };
 
 const BlogList = ({ blogs, updateBlog, removeBlog }) => {
@@ -121,7 +122,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      dispatch(setMessage("wrong username or password", "error"))
+      dispatch(setMessage("wrong username or password", "danger"))
       setUsername("");
       setPassword("");
     }
@@ -160,7 +161,7 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <div className="container">
       {user === null ? (
         <div>
           <h2>log in to application</h2>
@@ -175,7 +176,7 @@ const App = () => {
         </div>
       ) : (
         <div>
-          <Navbar user={user} handleLogout={handleLogout} />
+          <Navigation user={user} handleLogout={handleLogout} />
           <h2>blogs</h2>
           <Notification message={notification.message} messageCategory={notification.messageCategory} />
           <Routes>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs"
+import { Button, Form } from "react-bootstrap";
 
 const Blog = ({ blog, updateBlog }) => {
   const [comments, setComments] = useState(blog.comments)
@@ -31,14 +32,14 @@ const Blog = ({ blog, updateBlog }) => {
     <div>
       <h2>{blog.title}</h2>
       <a href={blog.url}>{blog.url}</a>
-      <br />{blog.likes} likes <button onClick={() => handleUpdate(blog)}>like</button>
+      <br />{blog.likes} likes <Button onClick={() => handleUpdate(blog)}>like</Button>
       <br />added by {blog.user.name}
       
       <h3>comments</h3>
-      <form onSubmit={handleSubmit}>
-        <input type='text' value={newComment} onChange={(event) => setNewComment(event.target.value)}></input>
-        <button type="submit">add comment</button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <Form.Control type='text' value={newComment} onChange={(event) => setNewComment(event.target.value)}></Form.Control>
+        <Button type="submit">add comment</Button>
+      </Form>
       <ul>
         {comments.map(comment => 
           <li key={comment.id}>{comment.content}</li>

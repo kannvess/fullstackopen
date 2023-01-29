@@ -42,7 +42,7 @@ router.post('/:id/comments', async (request, response) => {
   const savedComment = await comment.save()
 
   const blog = await Blog.findById(blogId)
-  blog.comments = blog.comments.concat(savedComment)
+  blog.comments = blog.comments.concat(savedComment._id)
   await blog.save()
 
   response.status(201).json(savedComment)

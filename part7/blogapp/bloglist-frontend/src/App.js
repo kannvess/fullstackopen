@@ -4,6 +4,8 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "./reducers/notificationReducer";
 
 const LoginForm = ({
   username,
@@ -75,8 +77,8 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [messageCategory, setMessageCategory] = useState("");
+  const dispatch = useDispatch()
+  const notification = useSelector(state => state.notification)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -100,17 +102,11 @@ const App = () => {
       blogService.setToken(user.token);
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       setUser(user);
-      setMessage(null);
-      setMessageCategory("");
+      dispatch(setMessage(null, ""))
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setMessage("wrong username or password");
-      setMessageCategory("error");
-      setTimeout(() => {
-        setMessage(null);
-        setMessageCategory("");
-      }, 5000);
+      dispatch(setMessage("wrong username or password", "error"))
       setUsername("");
       setPassword("");
     }
@@ -118,8 +114,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser");
-    setMessage(null);
-    setMessageCategory("");
+    dispatch(setMessage(null, ""))
     setUser(null);
   };
 
@@ -127,14 +122,7 @@ const App = () => {
     formRef.current.toggleVisibility();
     blogService.create(newBlog).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
-      setMessage(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-      );
-      setMessageCategory("success");
-      setTimeout(() => {
-        setMessage(null);
-        setMessageCategory("");
-      }, 5000);
+      dispatch(setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, "success"))
     });
   };
 
@@ -159,7 +147,7 @@ const App = () => {
       {user === null ? (
         <div>
           <h2>log in to application</h2>
-          <Notification message={message} messageCategory={messageCategory} />
+          <Notification message={notification.message} messageCategory={notification.messageCategory} />
           <LoginForm
             username={username}
             setUsername={setUsername}
@@ -171,7 +159,7 @@ const App = () => {
       ) : (
         <div>
           <h2>blogs</h2>
-          <Notification message={message} messageCategory={messageCategory} />
+          <Notification message={notification.message} messageCategory={notification.messageCategory} />
           <UserCredential user={user} handleLogout={handleLogout} />
           <Togglable buttonLabel="new blog" ref={formRef}>
             <BlogForm createBlog={handleNewBlog} />

@@ -6,7 +6,7 @@ import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "./reducers/notificationReducer";
-import { setBlogs, newBlog } from "./reducers/blogReducer";
+import { setBlogs, newBlog, updateBlog, removeBlog } from "./reducers/blogReducer";
 
 const LoginForm = ({
   username,
@@ -124,18 +124,12 @@ const App = () => {
     dispatch(newBlog(blog));
   };
 
-  const handleUpdate = (newBlog) => {
-    blogService.update(newBlog).then((returnedBlog) => {
-      setBlogs(
-        blogs.map((blog) => (blog.id === returnedBlog.id ? returnedBlog : blog))
-      );
-    });
+  const handleUpdate = (likedBlog) => {
+    dispatch(updateBlog(likedBlog))
   };
 
   const handleRemove = (blogId) => {
-    blogService.remove(blogId).then(() => {
-      setBlogs(blogs.filter((blog) => blog.id !== blogId));
-    });
+    dispatch(removeBlog(blogId))
   };
 
   const formRef = useRef();

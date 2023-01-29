@@ -10,7 +10,7 @@ import { setUser } from "./reducers/userReducer";
 import loginService from './services/login'
 import UserList from "./components/UserList";
 import userService from './services/users'
-import { Route, Routes, useMatch } from "react-router-dom";
+import { Route, Routes, useMatch, Link } from "react-router-dom";
 import User from './components/User'
 
 const LoginForm = ({
@@ -62,17 +62,22 @@ const UserCredential = ({ user, handleLogout }) => (
 );
 
 const BlogList = ({ blogs, updateBlog, removeBlog }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+  
   return (
     <div id="blog-list">
       {blogs.slice()
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            updateBlog={updateBlog}
-            removeBlog={removeBlog}
-          />
+          <div key={blog.id} style={blogStyle}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </div>
         ))}
     </div>
   );
@@ -149,9 +154,14 @@ const App = () => {
 
   const formRef = useRef();
 
-  const match = useMatch('/users/:id')
-  const userToShow = match
-    ? users.find(user => user.id === match.params.id)
+  const matchForUser = useMatch('/users/:id')
+  const userToShow = matchForUser
+    ? users.find(user => user.id === matchForUser.params.id)
+    : null
+
+  const matchForBlog = useMatch('/blogs/:id')
+  const blogToShow = matchForBlog
+    ? blogs.find(blog => blog.id === matchForBlog.params.id)
     : null
 
   return (
@@ -180,15 +190,12 @@ const App = () => {
                 <Togglable buttonLabel="new blog" ref={formRef}>
                   <BlogForm createBlog={handleNewBlog} />
                 </Togglable>
-                <BlogList
-                  blogs={blogs}
-                  updateBlog={handleUpdate}
-                  removeBlog={handleRemove}
-                />
+                <BlogList blogs={blogs} />
               </div>
             } />
             <Route path="/users/:id" element={<User user={userToShow} />} />
-            </Routes>
+            <Route path="/blogs/:id" element={<Blog blog={blogToShow} updateBlog={handleUpdate} removeBlog={handleRemove} />} />
+          </Routes>
         </div>
       )}
     </div>

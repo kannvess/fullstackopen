@@ -8,6 +8,9 @@ import { setMessage } from "./reducers/notificationReducer";
 import { setBlogs, newBlog, updateBlog, removeBlog } from "./reducers/blogReducer";
 import { setUser, login } from "./reducers/userReducer";
 import loginService from './services/login'
+import UserList from "./components/UserList";
+import userService from './services/users'
+import { Route, Routes } from "react-router-dom";
 
 const LoginForm = ({
   username,
@@ -81,6 +84,7 @@ const App = () => {
   const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
+  const [users, setUsers] = useState([])
 
   useEffect(() => {
     dispatch(setBlogs())
@@ -95,6 +99,14 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    userService
+      .getAll()
+      .then(response => {
+        setUsers(response)
+      })
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -155,14 +167,21 @@ const App = () => {
           <h2>blogs</h2>
           <Notification message={notification.message} messageCategory={notification.messageCategory} />
           <UserCredential user={user} handleLogout={handleLogout} />
-          <Togglable buttonLabel="new blog" ref={formRef}>
-            <BlogForm createBlog={handleNewBlog} />
-          </Togglable>
-          <BlogList
-            blogs={blogs}
-            updateBlog={handleUpdate}
-            removeBlog={handleRemove}
-          />
+          <Routes>
+            <Route path="/users" element={<UserList users={users} />} />
+            <Route path="/" element={
+              <div>
+                <Togglable buttonLabel="new blog" ref={formRef}>
+                  <BlogForm createBlog={handleNewBlog} />
+                </Togglable>
+                <BlogList
+                  blogs={blogs}
+                  updateBlog={handleUpdate}
+                  removeBlog={handleRemove}
+                />
+              </div>
+            } />
+            </Routes>
         </div>
       )}
     </div>

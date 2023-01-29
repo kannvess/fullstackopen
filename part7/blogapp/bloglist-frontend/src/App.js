@@ -12,6 +12,7 @@ import UserList from "./components/UserList";
 import userService from './services/users'
 import { Route, Routes, useMatch, Link } from "react-router-dom";
 import User from './components/User'
+import Navbar from "./components/Navbar";
 
 const LoginForm = ({
   username,
@@ -54,12 +55,6 @@ const Notification = ({ message, messageCategory }) => {
 
   return <div className={messageCategory}>{message}</div>;
 };
-
-const UserCredential = ({ user, handleLogout }) => (
-  <p>
-    {user.name} logged in <button onClick={handleLogout}>logout</button>
-  </p>
-);
 
 const BlogList = ({ blogs, updateBlog, removeBlog }) => {
   const blogStyle = {
@@ -180,9 +175,9 @@ const App = () => {
         </div>
       ) : (
         <div>
+          <Navbar user={user} handleLogout={handleLogout} />
           <h2>blogs</h2>
           <Notification message={notification.message} messageCategory={notification.messageCategory} />
-          <UserCredential user={user} handleLogout={handleLogout} />
           <Routes>
             <Route path="/users" element={<UserList users={users} />} />
             <Route path="/" element={

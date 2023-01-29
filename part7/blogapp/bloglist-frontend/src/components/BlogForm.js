@@ -8,9 +8,9 @@ const BlogForm = ({ createBlog }) => {
   const handleNewBlog = (event) => {
     event.preventDefault();
     createBlog({
-      title: title,
-      author: author,
-      url: url,
+      title,
+      author,
+      url
     });
 
     setTitle("");

@@ -6,6 +6,7 @@ import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "./reducers/notificationReducer";
+import { setBlogs, newBlog } from "./reducers/blogReducer";
 
 const LoginForm = ({
   username,
@@ -58,7 +59,7 @@ const UserCredential = ({ user, handleLogout }) => (
 const BlogList = ({ blogs, updateBlog, removeBlog }) => {
   return (
     <div id="blog-list">
-      {blogs
+      {blogs.slice()
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
           <Blog
@@ -74,15 +75,15 @@ const BlogList = ({ blogs, updateBlog, removeBlog }) => {
 
 const App = () => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const dispatch = useDispatch()
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(setBlogs())
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -118,12 +119,9 @@ const App = () => {
     setUser(null);
   };
 
-  const handleNewBlog = (newBlog) => {
+  const handleNewBlog = (blog) => {
     formRef.current.toggleVisibility();
-    blogService.create(newBlog).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog));
-      dispatch(setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, "success"))
-    });
+    dispatch(newBlog(blog));
   };
 
   const handleUpdate = (newBlog) => {

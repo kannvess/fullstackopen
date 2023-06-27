@@ -67,7 +67,6 @@ const typeDefs = `
 
 const resolvers = {
   Person: {
-    name: (root) => `${root.name} Afriansyah`,
     address: (root) => ({
       street: root.street,
       city: root.city,

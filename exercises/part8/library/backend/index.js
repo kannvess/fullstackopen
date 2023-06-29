@@ -139,12 +139,21 @@ const typeDefs = `
 
 const resolvers = {
   Author: {
-    // bookCount: (root) => books.filter((b) => b.author === root.name).length,
+    bookCount: async (root) => {
+      const listOfBooks = await Book.find({ author: root.id });
+      return listOfBooks.length;
+    },
   },
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
-    allBooks: async () => Book.find({}).populate('author'),
+    allBooks: async (root, args) => {
+      if (!args.genre) {
+        return Book.find({}).populate('author');
+      }
+
+      return Book.find({ genres: args.genre }).populate('author');
+    },
     allAuthors: async () => Author.find({}),
   },
   Mutation: {
@@ -164,14 +173,13 @@ const resolvers = {
       const newBook = new Book({ ...args, author: author._id });
       return newBook.save();
     },
-    // editAuthor: (root, args) => {
-    //   const author = authors.find((a) => a.name === args.name);
-    //   if (!author) return null;
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name });
+      if (!author) return null;
 
-    //   const updatedAuthor = { ...author, born: args.setBornTo };
-    //   authors = authors.map((a) => (a.name === updatedAuthor.name ? updatedAuthor : a));
-    //   return updatedAuthor;
-    // },
+      author.born = args.setBornTo;
+      return author.save();
+    },
   },
 };
 

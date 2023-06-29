@@ -2,6 +2,7 @@
 const { ApolloServer } = require('@apollo/server');
 const { startStandaloneServer } = require('@apollo/server/standalone');
 const mongoose = require('mongoose');
+const { GraphQLError } = require('graphql');
 
 require('dotenv').config();
 
@@ -164,14 +165,49 @@ const resolvers = {
           name: args.author,
         });
 
-        const savedAuthor = await newAuthor.save();
+        try {
+          await newAuthor.save();
+        } catch (error) {
+          throw new GraphQLError('Saving author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+              error,
+            },
+          });
+        }
 
-        const newBook = new Book({ ...args, author: savedAuthor._id });
-        return newBook.save();
+        const newBook = new Book({ ...args, author: newAuthor._id });
+
+        try {
+          await newBook.save();
+        } catch (error) {
+          throw new GraphQLError('Saving book failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.title,
+            },
+          });
+        }
+
+        return newBook;
       }
 
       const newBook = new Book({ ...args, author: author._id });
-      return newBook.save();
+
+      try {
+        await newBook.save();
+      } catch (error) {
+        throw new GraphQLError('Saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title,
+            error,
+          },
+        });
+      }
+
+      return newBook;
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name });

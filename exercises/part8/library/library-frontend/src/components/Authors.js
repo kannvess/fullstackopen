@@ -62,6 +62,7 @@ const Authors = (props) => {
             name:
             {' '}
             <select value={name} onChange={({ target }) => setName(target.value)}>
+              <option value='' disabled hidden>-- choose --</option>
               {authors.map((a) => 
                 <option key={a.name} value={a.name}>{a.name}</option>
               )}

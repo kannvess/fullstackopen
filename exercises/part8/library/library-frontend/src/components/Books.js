@@ -4,7 +4,11 @@ import { useState } from "react"
 
 const Books = (props) => {
   const [genre, setGenre] = useState('')
-  const result = useQuery(ALL_BOOKS)
+  const result = useQuery(ALL_BOOKS, {
+    variables: {
+      genre: genre === '' ? null : genre
+    }
+  })
   
   if (!props.show) {
     return null
@@ -13,7 +17,6 @@ const Books = (props) => {
   if (result.loading) return <div>loading...</div>
 
   const books = result.data.allBooks
-  const booksToShow = genre !== '' ? books.filter((b) => b.genres.includes(genre)) : books
 
   let genres = []
   books.forEach((b) => {
@@ -35,7 +38,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {booksToShow.map((a) => (
+          {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -47,6 +50,10 @@ const Books = (props) => {
       {genres.map((g) =>
         <button onClick={() => setGenre(g)} key={g}>{g}</button>
       )}
+      {genre === ''
+        ? null
+        : <button onClick={() => setGenre('')}>reset filter</button>
+      }
     </div>
   )
 }

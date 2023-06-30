@@ -1,14 +1,21 @@
-import { useQuery } from "@apollo/client"
+import { useApolloClient, useQuery } from "@apollo/client"
 import { ALL_BOOKS } from "../queries"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const Books = (props) => {
+  const client = useApolloClient()
   const [genre, setGenre] = useState('')
   const result = useQuery(ALL_BOOKS, {
     variables: {
       genre: genre === '' ? null : genre
     }
   })
+
+  useEffect(() => {
+    client.refetchQueries({
+      include: [ALL_BOOKS]
+    })
+  }, [genre])
   
   if (!props.show) {
     return null
@@ -48,7 +55,12 @@ const Books = (props) => {
         </tbody>
       </table>
       {genres.map((g) =>
-        <button onClick={() => setGenre(g)} key={g}>{g}</button>
+        <button
+          onClick={() => setGenre(g)}
+          key={g}
+        >
+          {g}
+        </button>
       )}
       {genre === ''
         ? null

@@ -5,7 +5,7 @@ import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import { useApolloClient, useSubscription } from '@apollo/client'
 import RecommendationPage from './components/RecommendationPage'
-import { BOOK_ADDED } from './queries'
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [token, setToken] = useState('')
@@ -17,6 +17,9 @@ const App = () => {
     onData: ({ data }) => {
       console.log(data)
       window.alert('New book added')
+      client.refetchQueries({
+        include: [ALL_BOOKS]
+      })
     }
   })
 

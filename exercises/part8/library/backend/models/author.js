@@ -8,6 +8,12 @@ const authorSchema = new mongoose.Schema({
     unique: true,
     minLength: 4,
   },
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Book',
+    },
+  ],
   born: Number,
 });
 

@@ -12,8 +12,9 @@ const User = require('./models/user');
 const resolvers = {
   Author: {
     bookCount: async (root) => {
-      const listOfBooks = await Book.find({ author: root.id });
-      return listOfBooks.length;
+      const author = await Author.findOne({ name: root.name });
+      console.log('Author.findOne');
+      return author.books.length;
     },
   },
   Query: {
@@ -26,7 +27,10 @@ const resolvers = {
 
       return Book.find({ genres: args.genre }).populate('author');
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      console.log('Author.find');
+      return Author.find({}).populate('books');
+    },
     me: (root, args, { currentUser }) => currentUser,
   },
   Mutation: {
@@ -58,9 +62,11 @@ const resolvers = {
         }
 
         const newBook = new Book({ ...args, author: newAuthor._id });
+        newAuthor.books = newAuthor.books.concat(newBook._id);
 
         try {
           await newBook.save();
+          await newAuthor.save();
         } catch (error) {
           throw new GraphQLError('Saving book failed', {
             extensions: {
@@ -76,9 +82,11 @@ const resolvers = {
       }
 
       const newBook = new Book({ ...args, author: author._id });
+      author.books = author.books.concat(newBook._id);
 
       try {
         await newBook.save();
+        await author.save();
       } catch (error) {
         throw new GraphQLError('Saving book failed', {
           extensions: {

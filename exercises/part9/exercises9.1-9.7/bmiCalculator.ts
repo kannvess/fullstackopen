@@ -39,4 +39,4 @@ try {
   console.log(errorMessage);
 }
 
-export default "default"
+export { calculateBmi }

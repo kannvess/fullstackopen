@@ -14,17 +14,17 @@ interface Hours {
 }
 
 const parseArguments = (args: string[]): Hours => {
-  if (args.length < 4) throw new Error('Not enough arguments!')
+  if (args.length < 4) throw new Error('Not enough arguments!');
 
   if (!args.slice(3).map((a) => Number(a)).includes(NaN)) {
     return {
       targetHour: Number(args[2]),
       exerciseHours: args.slice(3).map((a) => Number(a))
-    }
+    };
   } else {
-    throw new Error('Provided values were not numbers!')
+    throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 const calculateExercises = (exerciseHours: number[], targetHour: number): Result => {
   const periodLength = exerciseHours.length;
@@ -42,12 +42,12 @@ const calculateExercises = (exerciseHours: number[], targetHour: number): Result
     ratingDescription,
     target: targetHour,
     average,
-  }
-}
+  };
+};
 
 try {
-  const { targetHour, exerciseHours } = parseArguments(process.argv)
-  console.log(calculateExercises(exerciseHours, targetHour))
+  const { targetHour, exerciseHours } = parseArguments(process.argv);
+  console.log(calculateExercises(exerciseHours, targetHour));
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
@@ -57,4 +57,4 @@ try {
   
 }
 
-export default "test"
+export default "test";

@@ -116,5 +116,9 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-  }
+    "resolveJsonModule": true,
+  },
+  "include": [
+    "**/*.ts",
+  ]
 }

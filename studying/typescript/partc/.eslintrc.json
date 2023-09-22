@@ -29,7 +29,8 @@
           "max": 1,
           "maxEOF": 0
         }
-      ]
+      ],
+      "comma-dangle": ["error", "always-multiline"]
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {

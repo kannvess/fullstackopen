@@ -1,19 +1,17 @@
-interface ContentEntry {
-  name: string,
-  exerciseCount: number,
-}
+import { CoursePart } from "../types";
+import Part from "./Part";
 
 interface ContentProps {
-  content: ContentEntry[]
+  contents: CoursePart[];
 }
 
 const Content = (props: ContentProps):JSX.Element => {
   return (
-    <>
-    {props.content.map((c) =>
-      <p>{c.name} {c.exerciseCount}</p>
+    <div>
+    {props.contents.map((part) =>
+      <Part key={part.name} content={part} />
     )}
-    </>
+    </div>
   )
 }
 

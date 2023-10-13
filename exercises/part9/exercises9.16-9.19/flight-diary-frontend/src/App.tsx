@@ -45,7 +45,7 @@ const App = () => {
     setNewVisibility('');
     setNewWeather('');
     setNewComment('');
-  }
+  }  
   
   return (
     <div>
@@ -57,25 +57,93 @@ const App = () => {
             date:
             {' '}
             <input
+              type="date" 
               value={newDate}
               onChange={({ target }) => setNewDate(target.value)}
             />
           </label>
           <br />
+          <label>visibility: </label>
           <label>
-            visibility:
-            {' '}
+            great
             <input
-              value={newVisibility}
+              type="radio"
+              name="newVisibility"
+              value="great"
+              onChange={({ target }) => setNewVisibility(target.value)}
+            />
+          </label>
+          <label>
+            good
+            <input
+              type="radio"
+              name="newVisibility"
+              value="good"
+              onChange={({ target }) => setNewVisibility(target.value)}
+            />
+          </label>
+          <label>
+            ok
+            <input
+              type="radio"
+              name="newVisibility"
+              value="ok"
+              onChange={({ target }) => setNewVisibility(target.value)}
+            />
+          </label>
+          <label>
+            poor
+            <input
+              type="radio"
+              name="newVisibility"
+              value="poor"
               onChange={({ target }) => setNewVisibility(target.value)}
             />
           </label>
           <br />
+          <label>Weather: </label>
           <label>
-            weather:
-            {' '}
+            sunny
             <input
-              value={newWeather}
+              type="radio"
+              name="newWeather"
+              value="sunny"
+              onChange={({ target }) => setNewWeather(target.value)}
+            />
+          </label>
+          <label>
+            rainy
+            <input
+              type="radio"
+              name="newWeather"
+              value="rainy"
+              onChange={({ target }) => setNewWeather(target.value)}
+            />
+          </label>
+          <label>
+            cloudy
+            <input
+              type="radio"
+              name="newWeather"
+              value="cloudy"
+              onChange={({ target }) => setNewWeather(target.value)}
+            />
+          </label>
+          <label>
+            stormy
+            <input
+              type="radio"
+              name="newWeather"
+              value="stormy"
+              onChange={({ target }) => setNewWeather(target.value)}
+            />
+          </label>
+          <label>
+            windy
+            <input
+              type="radio"
+              name="newWeather"
+              value="windy"
               onChange={({ target }) => setNewWeather(target.value)}
             />
           </label>

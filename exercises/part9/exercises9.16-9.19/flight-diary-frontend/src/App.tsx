@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import diaryService from "./services/diaryService";
 import { Diary } from "./types";
+import Notification from "./components/Notification";
+import { AxiosError } from "axios";
 
 const App = () => {
   const [diaries, setDiaries] = useState<Diary[]>([]);
@@ -8,6 +10,7 @@ const App = () => {
   const [newVisibility, setNewVisibility] = useState('');
   const [newWeather, setNewWeather] = useState('');
   const [newComment, setNewComment] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchDiaries = async () => {
@@ -28,8 +31,15 @@ const App = () => {
       comment: newComment,
     }
 
-    const addedDiary = await diaryService.postDiary(diaryToAdd);
-    setDiaries(diaries.concat(addedDiary));
+    
+    try {
+      const addedDiary = await diaryService.postDiary(diaryToAdd);
+      setDiaries(diaries.concat(addedDiary));
+    } catch (e: unknown) {
+      if (e instanceof AxiosError) {
+        setErrorMessage(e.response?.data)
+      }
+    }
 
     setNewDate('');
     setNewVisibility('');
@@ -41,6 +51,7 @@ const App = () => {
     <div>
       <div>
         <h1>Add new entry</h1>
+        <Notification errorMessage={errorMessage} />
         <form onSubmit={submit}>
           <label>
             date:

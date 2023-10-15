@@ -1,11 +1,12 @@
-import { Patient } from "../types";
+import { Diagnosis, Patient } from "../types";
 
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import { useParams } from "react-router-dom";
 
 interface Props {
-  patients: Patient[]
+  patients: Patient[];
+  diagnoses: Diagnosis[];
 }
 
 const PatientPage = (props: Props) => {
@@ -31,7 +32,7 @@ const PatientPage = (props: Props) => {
           <ul>
           {e.diagnosisCodes
             ? e.diagnosisCodes.map((dc) =>
-              <li key={dc}>{dc}</li>
+              <li key={dc}>{dc} {props.diagnoses.find((d) => d.code === dc)!.name}</li>
             )
             : null
           }

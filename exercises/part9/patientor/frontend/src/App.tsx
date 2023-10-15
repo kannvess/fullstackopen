@@ -8,7 +8,7 @@ import { Diagnosis, Patient } from "./types";
 
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
-import PatientPage from "./components/PatientPage";
+import PatientPage from "./components/PatientPage/index";
 
 import diagnosisService from './services/diagnoses';
 

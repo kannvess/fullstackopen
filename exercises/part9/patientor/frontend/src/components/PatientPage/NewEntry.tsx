@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Entry } from "../../types";
+import { Diagnosis, Entry } from "../../types";
 import patientService from "../../services/patients";
 import axios, { AxiosError } from "axios";
+
+import { Input, MenuItem, Select } from "@mui/material";
 
 interface Props {
   entries: Entry[];
   setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
   patientId: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
+  diagnoses: Diagnosis[],
 }
 
 const NewEntry = (props: Props) => {
@@ -15,14 +18,14 @@ const NewEntry = (props: Props) => {
   const [newDate, setNewDate] = useState('');
   const [newSpecialist, setNewSpecialist] = useState('');
   const [newHealthCheckRating, setNewHealthCheckRating] = useState('');
-  const [newDiagnosisCodes, setNewDiagnosisCodes] = useState('');
+  const [newDiagnosisCodes, setNewDiagnosisCodes] = useState<string[]>([]);
   const [newEntryType, setNewEntryType] = useState<'HealthCheck' | 'OccupationalHealthcare' | 'Hospital'>('HealthCheck');
   const [newEmployerName, setNewEmployerName] = useState('');
   const [newSickLeaveStartDate, setNewSickLeaveStartDate] = useState('');
   const [newSickLeaveEndDate, setNewSickLeaveEndDate] = useState('');
   const [newDischargeDate, setNewDischargeDate] = useState('');
   const [newDischargeCriteria, setNewDischargeCriteria] = useState('');
-  
+    
   const submit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
 
@@ -31,7 +34,7 @@ const NewEntry = (props: Props) => {
         date: newDate,
         description: newDescription,
         specialist: newSpecialist,
-        diagnosisCodes: newDiagnosisCodes.split(', '),
+        diagnosisCodes: newDiagnosisCodes,
         type: newEntryType,
       };
 
@@ -83,7 +86,7 @@ const NewEntry = (props: Props) => {
     setNewDescription('');
     setNewDate('');
     setNewSpecialist('');
-    setNewDiagnosisCodes('');
+    setNewDiagnosisCodes([]);
     setNewHealthCheckRating('');
     setNewEmployerName('');
     setNewSickLeaveStartDate('');
@@ -114,11 +117,8 @@ const NewEntry = (props: Props) => {
         </label>
         <br />
         <label>
-          Date:
-          {' '}
-          <input
-            type="text"
-            value={newDate}
+          Date: <Input
+            type="date"
             onChange={({ target }) => setNewDate(target.value)}
           />
         </label>
@@ -136,11 +136,20 @@ const NewEntry = (props: Props) => {
         <label>
           Diagnosis codes:
           {' '}
-          <input
-            type="text"
+          <Select
             value={newDiagnosisCodes}
-            onChange={({ target }) => setNewDiagnosisCodes(target.value)}
-          />
+            multiple
+            onChange={({ target }) => setNewDiagnosisCodes(target.value as string[])}
+          >
+          {props.diagnoses.map((d) =>
+            <MenuItem
+              key={d.code}
+              value={d.code}
+            >
+              {d.code}
+            </MenuItem>
+          )}
+          </Select>
         </label>
         <br />
         {newEntryType === 'HealthCheck'
@@ -168,21 +177,15 @@ const NewEntry = (props: Props) => {
             </label>
             <br />
             <label>
-              Sick leave start date:
-              {' '}
-              <input
-                type="text"
-                value={newSickLeaveStartDate}
+              Sick leave start date: <Input
+                type="date"
                 onChange={({ target }) => setNewSickLeaveStartDate(target.value)}
               />
             </label>
             <br />
             <label>
-              Sick leave end date:
-              {' '}
-              <input
-                type="text"
-                value={newSickLeaveEndDate}
+              Sick leave end date: <Input
+                type="date"
                 onChange={({ target }) => setNewSickLeaveEndDate(target.value)}
               />
             </label>

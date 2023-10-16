@@ -40,7 +40,7 @@ const PatientPage = (props: Props) => {
         occupation: {patient.occupation}
       </p>
       <ErrorNotification errorMessage={errorMessage} />
-      <NewEntry setErrorMessage={setErrorMessage} entries={entries} setEntries={setEntries} patientId={patient.id} />
+      <NewEntry diagnoses={props.diagnoses} setErrorMessage={setErrorMessage} entries={entries} setEntries={setEntries} patientId={patient.id} />
       <h2>entries</h2>
       {entries.map((e) =>
         <EntryDetails key={e.id} entry={e} />

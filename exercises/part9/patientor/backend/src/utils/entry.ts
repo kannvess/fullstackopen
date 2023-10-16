@@ -18,7 +18,7 @@ const parseType = (type: unknown): 'Hospital' | 'HealthCheck' | 'OccupationalHea
       return 'Hospital';
     case 'HealthCheck':
       return 'HealthCheck';
-    case 'OccupationalHealthCare':
+    case 'OccupationalHealthcare':
       return 'OccupationalHealthcare';
     default:
       throw new Error(`Incorrect or missing type: ${type}`);
@@ -90,7 +90,7 @@ const parseEmployerName = (object: unknown): string => {
 };
 
 const isDischarge = (discharge: unknown): discharge is Discharge => {
-  if (!discharge || typeof discharge !== 'object' || !('date' in discharge) || !('criteria' in discharge)) {
+  if (!discharge || typeof discharge !== 'object' || !('date' in discharge) || !isString(discharge.date) || !isDate(discharge.date) || !('criteria' in discharge) || !isString(discharge.criteria)) {
     return false;
   }
 
@@ -110,7 +110,7 @@ const parseDischarge = (object: unknown): Discharge => {
 };
 
 const isSickLeave = (sickLeave: unknown): sickLeave is SickLeave => {
-  if (!sickLeave || typeof sickLeave !== 'object' || !('startDate' in sickLeave) || !('endDate' in sickLeave)) {
+  if (!sickLeave || typeof sickLeave !== 'object' || !('startDate' in sickLeave) || !isString(sickLeave.startDate) || !isDate(sickLeave.startDate) || !('endDate' in sickLeave) || !isString(sickLeave.endDate) || !isDate(sickLeave.endDate)) {
     return false;
   }
 
